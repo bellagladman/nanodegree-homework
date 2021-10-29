@@ -25,7 +25,12 @@ then you need to raise an error and exit the program.
 
 # Set correct PIN
 def set_correct_pin(pin):
-    correct_pin = pin
+    if not isinstance(pin, int):
+        raise ValueError("PINs must be a four digit number.")
+    if not 1000 <= pin < 9999:  # I have not been able to figure out a way to allow PINs to start with 0
+        raise ValueError("PINs must be four digits")
+    else:
+        correct_pin = pin
     # print('Correct pin set to: {}'.format(correct_pin))
     return correct_pin
 
@@ -51,33 +56,43 @@ def check_pin_is_correct(correct_pin):
 
 # Set account balance
 def set_account_balance(balance):
-    account_balance = balance
-    # print('Account balance set to: £{}'.format(account_balance))
+    if balance < 0:
+        raise ValueError("You can't add negative money to your bank account.")
+    else:
+        account_balance = balance
+    # print("Your account balance is: {}".format(account_balance))
     return account_balance
 
 
-def withdraw_cash(account_balance):
+def request_withdrawal(account_balance):
     try:
         withdrawal_request = int(input('How much money would you like to withdraw? '))
         assert 0 <= withdrawal_request, "You can't withdraw a negative number. Please try again."
         assert withdrawal_request <= account_balance, "Insufficient funds. Please try again."
+        assert withdrawal_request % 10 == 0, "You can only withdraw multiples of £10."
+        print('Your withdrawal request of £{:.2f} has been accepted. Please take your cash'.format(withdrawal_request))
     except Exception as e:
         print(e)
-    else:
-        account_balance = account_balance - withdrawal_request
-        print("Your request for £{:.2f} has been accepted. Please take your cash.".format(withdrawal_request))
-        print("Your new account balance is: £{:.2f}.".format(account_balance))
+    return withdrawal_request
 
 
-def make_a_withdrawal(correct_pin, account_balance):
-    if check_pin_is_correct(correct_pin):
-        withdraw_cash(account_balance)
+def update_account_balance(account_balance, withdrawal_request):
+    account_balance = account_balance - withdrawal_request
+    print("Your new account balance is: £{:.2f}.".format(account_balance))
+    return account_balance
+
+
+def make_a_withdrawal(correct_pin, balance):
+    if check_pin_is_correct(correct_pin) and set_account_balance(balance):
+        request_withdrawal(set_account_balance(balance))
+        update_account_balance((set_account_balance(balance)), (request_withdrawal(set_account_balance(balance))))
+    # I'm not super happy about how this function is looking. There are a lot of parentheses!
+    # I don't think this function aligns with the DRY principle...
+    # I'm not sure if there's a way to write one big function, with all these little functions inside it?
+    # I think this may have contributed to whatever it is that has reduced my ability to unit test this program.
     else:
-        pass
+        raise Exception("One of the steps failed")
 
 
 if __name__ == '__main__':
-    # set_account_balance(100)
-    # set_correct_pin(1234)
-    make_a_withdrawal(correct_pin=1234, account_balance=100)
-
+    make_a_withdrawal(correct_pin=1234, balance=100)
