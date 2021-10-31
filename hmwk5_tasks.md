@@ -136,10 +136,10 @@ keeping customer details safe
 making sure that customers can't book tickets for sold-out screenings
 
 ###Components or tools:
-Python and an editor
-MySQL and an editor
-a MySQL database
-unittest module
-an API with cinema film information 
+* Python and an editor
+* MySQL and an editor
+* a MySQL database
+* unittest module
+* an API with cinema film information 
 
 
