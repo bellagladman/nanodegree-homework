@@ -28,32 +28,40 @@ IMPORTANT:
 characters = "cbacba"
 phrase = "aabbccc"
 
-
-class PhraseSplitter:
-
-    def __init__(self, characters, phrase):
-        self.characters = characters
-        self.phrase = phrase
-
-    # def split_word(self, string):
-    #     return [char for char in string]
-
-    def generate_phrase(self, characters, phrase):
-        if len(phrase) > len(characters):
-            return "You cannot make the required phrase - you don't have enough characters!"
+chars1 = "ab ba"
+phrase1 = " abba"
 
 
-def split_word(string):
-    string_list = [char for char in string]
-    return string_list
+def phrase_checker(characters, phrase):
+    list1 = [characters, phrase]
+
+    def split_into_list(string):
+        string_list = list(string)
+        return string_list
+
+    for index, item in enumerate(list1):
+        list1[index] = split_into_list(list1[index])
+
+    for item in list1:
+        item.sort()
+
+    if list1[0] == list1[1]:
+        return "You can generate the given phrase '{}' with the given characters '{}'.".format(phrase, characters)
+    elif len(list1[1]) > len(list1[0]):
+        return "You don't have enough characters in the given set '{}' to make the given phrase '{}'.".format(characters, phrase)
+    else:
+        return "You can't generate this phrase '{}' with these characters '{}'.".format(phrase, characters)
+
+print(phrase_checker(characters, phrase))
+print(phrase_checker(chars1, phrase1))
 
 
-def split_into_list(string):
-    new_list = list(string)
-    return new_list
 
 
-print(split_word(characters))
-print(split_into_list(characters))
+
+
+
+
+
 
 
